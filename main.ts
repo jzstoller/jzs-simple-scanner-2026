@@ -23,6 +23,7 @@ interface ScannerSettings {
 	autoWhiteBalance: boolean;
 	exportAspectRatio: AspectRatioSetting;
 	exportAspectRatioOrientation: AspectRatioOrientation;
+	maxOutputMegapixels: number;
 }
 
 const DEFAULT_SETTINGS: ScannerSettings = {
@@ -35,6 +36,7 @@ const DEFAULT_SETTINGS: ScannerSettings = {
 	autoWhiteBalance: false,
 	exportAspectRatio: "original",
 	exportAspectRatioOrientation: "auto",
+	maxOutputMegapixels: 50,
 };
 
 export default class ScannerPlugin extends Plugin {
@@ -285,6 +287,18 @@ class ScannerSettingTab extends PluginSettingTab {
 					max: 1.0,
 					step: 0.05,
 					displayFormat: (value) => value.toFixed(2),
+				},
+			},
+			{
+				name: "Maximum crop size (megapixels)",
+				desc: "Crops larger than this are automatically scaled down (keeping aspect ratio) instead of failing. Raise for more detail on desktop; lower (e.g. 16) if the app runs out of memory on mobile.",
+				control: {
+					type: "slider",
+					key: "maxOutputMegapixels",
+					min: 8,
+					max: 100,
+					step: 1,
+					displayFormat: (value) => `${value} MP`,
 				},
 			},
 			{

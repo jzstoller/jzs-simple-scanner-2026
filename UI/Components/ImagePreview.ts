@@ -21,6 +21,7 @@ import {
 	createImageFromImageData,
 	drawImageWithRotation,
 	performPerspectiveCrop,
+	DEFAULT_MAX_OUTPUT_PIXELS,
 } from "Services/ImageTransform";
 import { findCropPointAtPosition } from "Services/Interaction";
 import type Logger from "Services/Logger";
@@ -56,6 +57,9 @@ export class ImagePreview {
 	private croppingPointsVisible!: boolean;
 	private cropPoints!: CropPoint[];
 	private draggedPointIndex!: number;
+
+	// Maximum crop output size in total pixels; larger crops are downscaled
+	public maxOutputPixels = DEFAULT_MAX_OUTPUT_PIXELS;
 
 	// Configuration
 	private magnifierConfig: MagnifierConfig;
@@ -676,6 +680,7 @@ export class ImagePreview {
 			workingCanvas.height,
 			scaledCropPoints,
 			1,
+			this.maxOutputPixels,
 		);
 
 		if (!result.success || !result.imageData || !result.dimensions) {

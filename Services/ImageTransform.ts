@@ -9,6 +9,10 @@ import PerspT from "perspective-transform";
 import { calculateOutputDimensions, orderCropPoints } from "./CropPointManager";
 import { CropPoint, ImageDimensions, OperationResult } from "./types";
 
+export const DEFAULT_MAX_OUTPUT_PIXELS = 50_000_000;
+// Canvas edge limit in Chromium.
+const MAX_EDGE_PIXELS = 16384;
+
 // Perspective correction turns the user-selected quad back into a flat rectangle before export.
 /**
  * Perform perspective crop transformation on canvas image data
@@ -26,6 +30,7 @@ export function performPerspectiveCrop(
 	sourceHeight: number,
 	cropPoints: CropPoint[],
 	dpr = 1,
+	maxPixels = DEFAULT_MAX_OUTPUT_PIXELS,
 ): OperationResult & { imageData?: ImageData; dimensions?: ImageDimensions } {
 	try {
 		// Validate crop points exist
@@ -52,12 +57,20 @@ export function performPerspectiveCrop(
 			};
 		}
 
-		if (dimensions.width > 5000 || dimensions.height > 5000) {
-			return {
-				success: false,
-				message:
-					"Crop area too large. Maximum dimensions: 5000x5000 pixels.",
-			};
+		// Downscale proportionally instead of failing when over the pixel/edge limits.
+		const originalDimensions = { ...dimensions };
+		const scale = Math.min(
+			1,
+			Math.sqrt(maxPixels / (dimensions.width * dimensions.height)),
+			MAX_EDGE_PIXELS / dimensions.width,
+			MAX_EDGE_PIXELS / dimensions.height,
+		);
+		if (scale < 1) {
+			dimensions.width = Math.max(1, Math.floor(dimensions.width * scale));
+			dimensions.height = Math.max(
+				1,
+				Math.floor(dimensions.height * scale),
+			);
 		}
 
 		// Create source coordinates (current crop point positions)
@@ -129,7 +142,10 @@ export function performPerspectiveCrop(
 
 		return {
 			success: true,
-			message: "Perspective crop applied successfully",
+			message:
+				scale < 1
+					? `Crop applied. Output reduced from ${originalDimensions.width}×${originalDimensions.height} to ${dimensions.width}×${dimensions.height} to fit the size limit.`
+					: "Perspective crop applied successfully",
 			imageData: outputImageData,
 			dimensions,
 		};

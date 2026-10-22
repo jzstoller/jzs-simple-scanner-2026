@@ -58,6 +58,9 @@ export class ScannerModal extends Modal {
 			this.plugin.logger,
 		);
 
+		this.canvas.maxOutputPixels =
+			this.plugin.settings.maxOutputMegapixels * 1_000_000;
+
 		this.buttonWrapper = this.contentEl.createDiv("button-wrapper");
 		this.confirmButtonWrapper = this.contentEl.createDiv(
 			"confirm-button-wrapper",
