@@ -48,7 +48,9 @@ git push origin "$VERSION"
 
 # 7. Create GitHub release with attached files
 echo "📦 Creating GitHub release..."
-gh release create "$VERSION" \
+# pyenv/VS Code set SSL_CERT_FILE to certifi's bundle, which lacks the Netskope
+# proxy CA; unset it so gh (Go) uses the macOS keychain instead.
+env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE gh release create "$VERSION" \
   --title "$VERSION" \
   --notes "Release $VERSION" \
   main.js \
