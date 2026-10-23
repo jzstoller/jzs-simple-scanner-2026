@@ -7,10 +7,11 @@ set -e
 # This will:
 #   - bump package.json to 1.2.5
 #   - run version-bump.mjs (updates manifest.json + versions.json)
-#   - rebuild the plugin (main.js)
+#   - verify the plugin builds locally
 #   - commit all changes
 #   - create a git tag (1.2.5)
-#   - push commit + tag to GitHub
+#   - push commit + tag to GitHub; the release workflow then builds,
+#     attests, and publishes the release assets
 
 VERSION="$1"
 
@@ -28,14 +29,14 @@ npm version "$VERSION" --no-git-tag-version
 # 2. Run your Node bump script (updates manifest.json + versions.json)
 npm run version
 
-# 3. Build the plugin
-echo "📦 Building plugin..."
+# 3. Local build check (the release build and attestation run in CI)
+echo "📦 Verifying build..."
 npm run build
 
 # 4. Commit changes
 echo "Enter commit message:"
 read MESSAGE
-git add package.json manifest.json versions.json main.js package-lock.json
+git add package.json manifest.json versions.json package-lock.json
 git commit -m "Release $VERSION: $MESSAGE"
 
 # 5. Create tag without 'v' prefix
@@ -46,16 +47,6 @@ echo "🚀 Pushing to GitHub..."
 git push
 git push origin "$VERSION"
 
-# 7. Create GitHub release with attached files
-echo "📦 Creating GitHub release..."
-# pyenv/VS Code set SSL_CERT_FILE to certifi's bundle, which lacks the Netskope
-# proxy CA; unset it so gh (Go) uses the macOS keychain instead.
-env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE gh release create "$VERSION" \
-  --title "$VERSION" \
-  --notes "Release $VERSION" \
-  main.js \
-  manifest.json \
-  styles.css
-
 echo "✅ Version bump complete: $VERSION"
-echo "✅ GitHub release published: https://github.com/jzstoller/jzs-simple-scanner-2026/releases/tag/$VERSION"
+echo "⏳ GitHub Actions will build, attest, and publish the release:"
+echo "   https://github.com/jzstoller/jzs-simple-scanner-2026/actions"
