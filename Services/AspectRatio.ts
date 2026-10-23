@@ -68,7 +68,7 @@ export function stretchCanvasToAspectRatio(
 		targetWidth = Math.max(1, Math.round(sourceLongEdge * targetRatio));
 	}
 
-	const out = activeDocument.createElement("canvas");
+	const out = createEl("canvas");
 	out.width = targetWidth;
 	out.height = targetHeight;
 	const ctx = out.getContext("2d");

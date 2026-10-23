@@ -400,7 +400,7 @@ export class ImagePreview {
 		}
 
 		const dimensions = this.getSourceDimensions();
-		const workingCanvas = activeDocument.createElement("canvas");
+		const workingCanvas = createEl("canvas");
 		workingCanvas.width = dimensions.width;
 		workingCanvas.height = dimensions.height;
 
@@ -773,7 +773,7 @@ export class ImagePreview {
 			}
 		}
 
-		const exportCanvas = activeDocument.createElement("canvas");
+		const exportCanvas = createEl("canvas");
 		exportCanvas.width = exportWidth;
 		exportCanvas.height = exportHeight;
 		const exportCtx = exportCanvas.getContext("2d", {

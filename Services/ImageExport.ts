@@ -83,7 +83,7 @@ export function resizeCanvas(
 	if (longEdge <= targetLongEdge) return canvas;
 
 	const scale = targetLongEdge / longEdge;
-	const out = activeDocument.createElement("canvas");
+	const out = createEl("canvas");
 	out.width = Math.round(width * scale);
 	out.height = Math.round(height * scale);
 	const outCtx = out.getContext("2d");

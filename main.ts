@@ -66,7 +66,7 @@ export default class ScannerPlugin extends Plugin {
 
 				// 7/18 5p, await this.logger.info("Scanner modal loaded");
 
-				const input = activeDocument.createElement("input");
+				const input = createEl("input");
 
 				//await this.logger.info("File input element created");
 

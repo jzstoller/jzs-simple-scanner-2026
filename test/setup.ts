@@ -121,6 +121,10 @@ beforeEach(() => {
 	(global as unknown as { activeDocument: Document }).activeDocument =
 		document;
 
+	// Obsidian's global `createEl` helper; happy-dom doesn't provide it.
+	(global as unknown as { createEl: (tag: string) => HTMLElement }).createEl =
+		(tag: string) => document.createElement(tag);
+
 	// Mock window.devicePixelRatio
 	Object.defineProperty(window, "devicePixelRatio", {
 		writable: true,

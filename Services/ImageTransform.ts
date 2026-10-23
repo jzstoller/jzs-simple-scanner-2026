@@ -174,7 +174,7 @@ export function createImageFromImageData(
 ): Promise<HTMLImageElement> {
 	return new Promise((resolve, reject) => {
 		// Create temporary canvas matching ImageData dimensions (handles DPR correctly)
-		const tempCanvas = activeDocument.createElement("canvas");
+		const tempCanvas = createEl("canvas");
 		tempCanvas.width = width ?? imageData.width;
 		tempCanvas.height = height ?? imageData.height;
 		const tempCtx = tempCanvas.getContext("2d", {

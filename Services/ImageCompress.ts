@@ -58,7 +58,7 @@ export async function compressCanvas(
 	const outW = Math.max(1, Math.round(srcW * scale));
 	const outH = Math.max(1, Math.round(srcH * scale));
 
-	const out = activeDocument.createElement("canvas");
+	const out = createEl("canvas");
 	out.width = outW;
 	out.height = outH;
 	const ctx = out.getContext("2d", { willReadFrequently: true });
