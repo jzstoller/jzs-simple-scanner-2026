@@ -49,7 +49,7 @@ An Obsidian plugin for scanning and processing images and documents. Capture or 
 
 ## Installation
 
-### From Obsidian Community Plugins (Coming Soon)
+### From Obsidian Community Plugins
 1. Open Obsidian Settings → Community Plugins
 2. Search for "Simple Scanner"
 3. Click Install, then Enable
